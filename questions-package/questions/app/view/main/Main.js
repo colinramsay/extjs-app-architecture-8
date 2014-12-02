@@ -10,7 +10,7 @@ Ext.define('Questions.view.main.Main', {
     requires: [
         'Questions.view.main.MainController',
         'Questions.view.main.MainModel',
-        'Wizard.TestContainer'
+        'Wizard.view.wizard.Wizard'
     ],
 
     xtype: 'app-main',
@@ -30,7 +30,9 @@ Ext.define('Questions.view.main.Main', {
             title: '{name}'
         },
         region: 'west',
-        html: '<ul><li>This area is commonly used for navigation, for example, using a "tree" component.</li></ul>',
+        items: [
+            
+        ],
         width: 250,
         split: true,
         tbar: [{
@@ -39,6 +41,6 @@ Ext.define('Questions.view.main.Main', {
         }]
     },{
         region: 'center',
-        xtype: 'wizard-testcontainer'
+        xtype: 'wizard'
     }]
 });

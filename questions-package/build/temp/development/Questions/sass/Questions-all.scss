@@ -720,7 +720,16 @@ $include-questions-application: true;
 $include-questions-view-main-main: true;
 $include-questions-view-main-maincontroller: true;
 $include-questions-view-main-mainmodel: true;
-$include-wizard-testcontainer: true;
+$include-wizard-form-field-text: true;
+$include-wizard-model-question: true;
+$include-wizard-model-questionnaire: true;
+$include-wizard-model-step: true;
+$include-wizard-view-wizard-navigation: true;
+$include-wizard-view-wizard-progress: true;
+$include-wizard-view-wizard-step: true;
+$include-wizard-view-wizard-wizard: true;
+$include-wizard-view-wizard-wizardcontroller: true;
+$include-wizard-view-wizard-wizardmodel: true;
 /* including package ext-theme-base */
 @import '../../../../../ext/packages/ext-theme-base/sass/etc/all';
 /* including package ext-theme-neutral */
