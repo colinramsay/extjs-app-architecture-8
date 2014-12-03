@@ -6,6 +6,7 @@ Ext.define('Wizard.view.wizard.Wizard', {
         'Wizard.view.wizard.Progress', 'Wizard.view.wizard.WizardController',
         'Wizard.view.wizard.Step'
     ],
+    cls: 'wizard',
     viewModel: 'wizard',
     controller: 'wizard',
     layout: 'card',
@@ -23,7 +24,16 @@ Ext.define('Wizard.view.wizard.Wizard', {
     initComponent: function() {     
         this.callParent();
 
-        this.getViewModel().bind('{questionnaire}', function(questionnaire) {
+        this.getViewModel().bind('{currentStepIndex}', function(v) {
+            console.log('currentStepIndex: ' + v);
+        });
+
+        this.getViewModel().bind('{currentValidStepIndex}', function(v) {
+            console.log('currentValidStepIndex: ' + v);
+        });
+
+        this.getViewModel().bind({ bindTo:'{questionnaire}', deep: true }, function(questionnaire) {
+            console.log(questionnaire);
             this.add({ xtype: 'container', bind: { html: '{questionnaire.introduction}' } });
 
             questionnaire.steps().each(function(step, i) {

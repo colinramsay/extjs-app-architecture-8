@@ -22,6 +22,9 @@ Ext.define('Wizard.view.wizard.WizardController', {
 
         if(!step.isValid || step.isValid()) {
             this.getViewModel().set('currentStepIndex', this.getViewModel().get('currentStepIndex') + 1);
+            this.getViewModel().set('currentValidStepIndex', this.getViewModel().get('currentStepIndex'));
+        } else if(!step.isValid()) {
+            this.getViewModel().set('currentValidStepIndex', this.getViewModel().get('currentStepIndex'));
         }
     },
 

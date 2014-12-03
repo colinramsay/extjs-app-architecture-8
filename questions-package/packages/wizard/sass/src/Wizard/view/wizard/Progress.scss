@@ -1,0 +1,24 @@
+@mixin wizard-progress-ui(
+	$ui: null
+) {
+	.wizard-progress-#{$ui} {
+		padding: 10px;
+
+		@include extjs-button-small-ui(
+			$ui: 'default',
+			$border-radius: 10px,
+	        $border-width: 1px,
+
+	        $border-color: red,
+
+	        $padding: 10px,
+	        $text-padding: 10px,
+	        $background-color: blue,
+	        $color: black        
+		);
+	}
+}
+
+@include wizard-progress-ui(
+    $ui: 'default'
+);

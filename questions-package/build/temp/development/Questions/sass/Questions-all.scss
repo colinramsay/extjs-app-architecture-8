@@ -983,3 +983,8 @@ $relative-image-path-for-uis: $ext-theme-neptune-resource-path;
 @import '../../../../../ext/packages/ext-theme-neptune/sass/src/form/field/File';
 @import '../../../../../ext/packages/ext-theme-neptune/sass/src/form/field/HtmlEditor';
 @import '../../../../../ext/packages/ext-theme-neptune/sass/src/resizer/Resizer';
+/* including package wizard */
+$wizard-resource-path: 'wizard/images' !default;
+$relative-image-path-for-uis: $wizard-resource-path;
+@import '../../../../../packages/wizard/sass/src/Wizard/view/wizard/Progress';
+@import '../../../../../packages/wizard/sass/src/Wizard/view/wizard/Wizard';

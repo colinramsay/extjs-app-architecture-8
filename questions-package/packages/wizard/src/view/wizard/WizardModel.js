@@ -15,15 +15,11 @@ Ext.define('Wizard.view.wizard.WizardModel', {
     },
 
     data: {
-        currentStepIndex: -1
+        currentStepIndex: -1,
+        currentValidStepIndex: 0
     },
 
     formulas: {
-        currentStep: function(get) {
-            var i = get('currentStepIndex');
-            return get('step' + i);
-        },
-
         stepCount: function(get) {
             return get('questionnaire').steps().count();
         },
