@@ -1,3 +1,4 @@
+// packages/wizard/src/model/Question.js
 Ext.define('Wizard.model.Question', {
     extend: 'Ext.data.Model',
     fields: [
@@ -5,16 +6,23 @@ Ext.define('Wizard.model.Question', {
         { name: 'required', type: 'boolean' },
         { name: 'questionText' },
         { name: 'type' },
-        { name: 'answer' }
+        { name: 'answer' },
+        {
+             name: 'stepId',
+             reference: {
+                type: 'Wizard.model.Step',
+                inverse: 'questions'
+             }
+         }
     ],
+    
+    validators: { answer: 'presence' },
 
-    validators: {
-        answer: [
-            'presence'
-        ]
-    },
-
-    belongsTo: {
-        model: 'Wizard.model.Step'
+    getValidation: function() {
+        if(this.get('required')) {
+            return this.callParent();
+        } else {
+            return new Ext.data.Validation();
+        }
     }
 });

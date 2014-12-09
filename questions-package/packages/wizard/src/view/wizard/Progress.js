@@ -1,63 +1,58 @@
+// packages/wizard/src/view/Progress.js
 Ext.define('Wizard.view.wizard.Progress', {
     extend: 'Ext.Container',
     xtype: 'wizard-progress',
-    defaultType: 'button',
-    layout: {
-        type: 'hbox'
-    },
-    baseCls: 'wizard-progress',
-    config: {
-        stepCount: null
-    },
-    defaultBindProperty: 'stepCount',
-
-
     
+    config: {
+        steps: null
+    },
+    defaultBindProperty: 'steps',
+    defaultType: 'button',
+    baseCls: 'wizard-progress',
+    layout: {
+        type: 'hbox',
+        pack: 'center'
+    },
+    
+    applySteps: function(steps) {
+        
+        var lineHtml = '<div class="wizard-progress-bar"></div>',
+            stepArr = steps.getData().items,
+            items = this.buildProgressIcons(stepArr),
+            container;
 
-    applyStepCount: function(stepCount) {
-        if(Ext.isNumber(stepCount)) {
-            this.removeAll();
+        this.removeAll();
+        
+        items.unshift({ text: 'Start', stepIndex: 0 });
+        items.push({ 
+            text: 'End', bind: {
+                disabled: '{isNotLastStep}'
+            }
+        });
 
-            this.add({ text: 'Start', stepIndex: -1 })
-            
-            for(var i = 0; i < stepCount; i++) {
-                this.add({
-                    text: i + 1, stepIndex: i, bind: { disabled: '{isDisabled}' },
-                    viewModel: {
-                        data: {
-                            stepIndex: i
-                        },
-                        formulas: {
-                            isDisabled: function(get) {
+        container = this.add({
+            xtype: 'container', cls: 'wizard-progress-inner',
+            defaultType: 'button', items: items
+        });
 
-                                if(get('stepIndex') === 0) {
-                                    return false;
-                                }
+        container.getEl().insertHtml('afterBegin',  lineHtml);
 
-                                return get('stepIndex') >= ( get('currentValidStepIndex'));
-                            }
-                        }
-                    }
-                });
-            }   
+        return steps;
+    },
 
-            this.add({
-                text: 'End', stepIndex: stepCount,
+
+    buildProgressIcons: function(steps) {
+        return Ext.Array.map(steps, function(step, i){
+            return {
+                text: i + 1, stepIndex: i + 1, bind: { disabled: '{!isEnabled}' },
                 viewModel: {
-                    data: {
-                        stepIndex: stepCount
-                    },
                     formulas: {
-                        dis: function(get) {
-                            console.log(get('stepIndex'), get('stepCount'));
-                            return get('currentValidStepIndex') !== get('stepCount') + 1;
+                        isEnabled: function(get) {
+                            return get('currentPosition') > i;
                         }
                     }
-                },
-                bind: { disabled: '{dis}' }
-            })
-        }
-
-        return stepCount;
+                }
+            };
+        });
     }
 });

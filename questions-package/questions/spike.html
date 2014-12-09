@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html manifest="">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Chart Test</title>
+    <link rel="stylesheet" type="text/css" href="../ext/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css">
+    <script type="text/javascript" src="../ext/build/ext-all-debug.js"></script>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script type="text/javascript">
+	Ext.onReady(function() {
+Ext.form.field.Text.prototype.publishValue = function () {
+    var me = this;
+
+    // Don't check for errors when publishing the field value
+    //if (me.rendered && !me.getErrors().length) {
+    if (me.rendered) {
+        me.publishState('value', me.getValue());
+    }
+}
+
+
+		var vm = Ext.create('Ext.app.ViewModel', {
+			data: {
+				questionnaire: null
+			},
+
+			formulas: {
+				
+			}
+		});
+
+		var viewport = Ext.create('Ext.Container', {
+			itemId: 'main',
+			viewModel: vm,
+			renderTo: 'app',
+			items: [
+				{ xtype: 'container', bind: { html: '{questionnaire.title}'} },
+				{ xtype: 'button', text: 'prev', bind: { disabled: '{disabled}' } },
+				{ xtype: 'button', text: 'next', bind: { disabled: '{disabled}' } }
+			],
+		});
+
+
+		var Questionnaire = Ext.define('Wizard.model.Questionnaire', {
+		    extend: 'Ext.data.Model',
+		    fields: [
+		        { name: 'title' },
+		        { name: 'introduction' },
+		        { name: 'conclusion' }
+		    ],
+		    proxy: {
+		        type: 'ajax',
+		        url : './spike.json'
+		    }
+		});
+
+		var Step = Ext.define('Wizard.model.Step', {
+		    extend: 'Ext.data.Model',
+		    //requires: ['Wizard.model.Questionnaire'],
+		    fields: [
+		        { name: 'title' },
+		        { name: 'introduction' },
+		        {
+			         name: 'questionnaireId',
+			         reference: {
+			         	type: 'Wizard.model.Questionnaire',
+			         	association: 'StepsByQuestionnaire',
+			         	role: 'questionnaire',
+             			inverse: 'steps'
+			         }
+			     }
+		    ],
+
+		    isValid: function() {
+		        var valid = true;
+		        this.questions().each(function(q) {
+		            if(q.isValid() === false) {
+		                valid = false;
+		            }
+		        });
+		        this.set('valid', valid);
+		        return valid;
+		    }
+		});
+
+		var Question = Ext.define('Wizard.model.Question', {
+		    extend: 'Ext.data.Model',
+		    //requires: ['Wizard.model.Step'],
+		    fields: [
+		        { name: 'name' },
+		        { name: 'required', type: 'boolean' },
+		        { name: 'questionText' },
+		        { name: 'type' },
+		        { name: 'answer' },
+		        {
+			         name: 'stepId',
+			         reference: {
+			         	type: 'Wizard.model.Step',
+			         	association: 'QuestionsByStep',
+			         	role: 'step',
+			         	inverse: 'questions'
+			         }
+			     }
+
+		    ],
+		    validators: {
+		        answer: { type: 'length', min: 2 },
+		    },
+		});
+
+
+
+		Questionnaire.load(1, {
+			callback: function(questionnaire) {
+				questionnaire.steps().each(function(s) {
+
+					var stepForm = viewport.add({
+						xtype: 'form',
+						viewModel: { 
+							data: { step:s }
+						}
+					});
+
+					s.questions().each(function(q) {
+						var input = stepForm.add({ 
+							xtype: 'textfield', modelValidation: true,
+							viewModel: {
+								data: { question: q },
+								formulas: {
+									isValid: {
+										bind: {
+											bindTo: '{question}',
+											deep: true
+										},
+										get: function() {
+											return this.get('step').isValid();
+										}
+									}
+								}
+							},
+							bind: '{question.answer}',
+							fieldLabel: q.get('text')
+						});
+					});
+
+					stepForm.getViewModel().bind({ bindTo: '{step}', deep: true}, function(v) {
+						console.log('step', v.isValid());
+					})
+				})
+			}
+		});
+	});
+	</script>
+</body>
+</html>

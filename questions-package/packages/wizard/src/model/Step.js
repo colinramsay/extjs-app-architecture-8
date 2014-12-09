@@ -1,17 +1,29 @@
+// packages/wizard/src/model/Questionnaire.js
 Ext.define('Wizard.model.Step', {
     extend: 'Ext.data.Model',
-    requires: ['Wizard.model.Question'],
     fields: [
         { name: 'title' },
-        { name: 'introduction' }
+        { name: 'introduction' },
+        {
+             name: 'questionnaireId',
+             reference: {
+                type: 'Wizard.model.Questionnaire',
+                inverse: 'steps'
+             }
+         }
     ],
 
-    hasMany: [{
-        name: 'questions',
-        model: 'Wizard.model.Question'
-    }],
+    isValid: function() {
+        var valid = true;
 
-    belongsTo: {
-        model: 'Wizard.model.Questionnaire'
+        this.questions().each(function(q) {
+            if(q.isValid() === false) {
+                valid = false;
+            }
+        });
+
+        this.set('valid', valid);
+        
+        return valid;
     }
 });

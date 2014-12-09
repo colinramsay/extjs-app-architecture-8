@@ -1,0 +1,12 @@
+.wizard-step-introduction {
+	background: transparentize($panel-base-color, 0.9);
+	font-weight: bold;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.wizard-step {
+	.x-form-item {
+		margin-bottom: 10px;
+	}
+}

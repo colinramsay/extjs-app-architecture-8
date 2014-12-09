@@ -1,8 +1,4 @@
-/**
- * @class Wizard.view.wizard.WizardController
- * @extends Ext.app.ViewController
- * Description
- */
+// packages/wizard/src/view/WizardController.js
 Ext.define('Wizard.view.wizard.WizardController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.wizard',
@@ -16,33 +12,26 @@ Ext.define('Wizard.view.wizard.WizardController', {
         }
     },
 
-
     onNextClick: function() {
-        var step = this.getView().getLayout().getActiveItem();
-
-        if(!step.isValid || step.isValid()) {
-            this.getViewModel().set('currentStepIndex', this.getViewModel().get('currentStepIndex') + 1);
-            this.getViewModel().set('currentValidStepIndex', this.getViewModel().get('currentStepIndex'));
-        } else if(!step.isValid()) {
-            this.getViewModel().set('currentValidStepIndex', this.getViewModel().get('currentStepIndex'));
-        }
+        var current = this.getViewModel().get('currentPosition');
+        this.getViewModel().set('currentPosition', current + 1);
     },
-
 
     onPrevClick: function() {
-        this.getViewModel().set('currentStepIndex', this.getViewModel().get('currentStepIndex') - 1);
+        var current = this.getViewModel().get('currentPosition');
+        this.getViewModel().set('currentPosition', current - 1);
     },
 
-
     onRestartClick: function() {
-        this.getViewModel().set('currentStepIndex', -1);
+        this.getViewModel().set('currentPosition', 0);
     },
 
     onFinishClick: function() {
-        
+        var questionnaire = this.getViewModel().get('questionnaire');
+        this.fireEvent('wizardcomplete', questionnaire);
     },
 
     onStepClick: function(btn) {
-        this.getViewModel().set('currentStepIndex', btn.stepIndex);
+        this.getViewModel().set('currentPosition', btn.stepIndex);
     }
 });

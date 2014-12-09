@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.get('/questionnaires/:id', function(req, res) {
+app.get('/questionnaire/:id', function(req, res) {
     var id = 1,//req.params.id,
         stepIds,
         populatedSteps = [];

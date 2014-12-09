@@ -9,8 +9,7 @@ Ext.define('Questions.view.main.Main', {
     extend: 'Ext.container.Container',
     requires: [
         'Questions.view.main.MainController',
-        'Questions.view.main.MainModel',
-        'Wizard.view.wizard.Wizard'
+        'Questions.view.main.MainModel'
     ],
 
     xtype: 'app-main',
@@ -21,26 +20,13 @@ Ext.define('Questions.view.main.Main', {
     },
 
     layout: {
-        type: 'border'
+        type: 'vbox',
+        align: 'center'
     },
 
     items: [{
-        xtype: 'panel',
-        bind: {
-            title: '{name}'
-        },
-        region: 'west',
-        items: [
-            
-        ],
-        width: 250,
-        split: true,
-        tbar: [{
-            text: 'Button',
-            handler: 'onClickButton'
-        }]
-    },{
-        region: 'center',
-        xtype: 'wizard'
+        xtype: 'button',
+        text: 'Launch Wizard',
+        handler: 'onClickButton'
     }]
 });

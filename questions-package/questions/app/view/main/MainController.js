@@ -1,26 +1,29 @@
-/**
- * This class is the main view for the application. It is specified in app.js as the
- * "autoCreateViewport" property. That setting automatically applies the "viewport"
- * plugin to promote that instance of this class to the body element.
- *
- * TODO - Replace this content of this view to suite the needs of your application.
- */
 Ext.define('Questions.view.main.MainController', {
     extend: 'Ext.app.ViewController',
-
     requires: [
-        'Ext.MessageBox'
+        'Wizard.view.wizard.Wizard'
     ],
 
     alias: 'controller.main',
 
-    onClickButton: function () {
-        Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
+    listen: {
+        controller: {
+            'wizard': {
+                'wizardcomplete': function(q) {
+                    console.log(q);
+                }
+            }
+        }
     },
 
-    onConfirm: function (choice) {
-        if (choice === 'yes') {
-            //
-        }
+    onClickButton: function () {
+        this.wizard = Ext.create('Ext.Window', {
+            header: false, modal: true, layout: 'fit',
+            autoShow: true, resizable: false,
+            width: 800, height: 600, 
+            items: [{ xtype: 'wizard' }],
+        });
+
+        this.wizard.down('wizard').load(1);
     }
 });

@@ -1,74 +1,76 @@
+// packages/wizard/src/view/Wizard.js
 Ext.define('Wizard.view.wizard.Wizard', {
     extend: 'Ext.Panel',
     xtype: 'wizard',
     requires: [
-        'Wizard.form.field.Text', 'Wizard.view.wizard.WizardModel',
-        'Wizard.view.wizard.Progress', 'Wizard.view.wizard.WizardController',
-        'Wizard.view.wizard.Step'
+        'Wizard.model.Questionnaire',
+        'Wizard.model.Step',
+        'Wizard.model.Question'
     ],
-    cls: 'wizard',
+    ui: 'wizard',
+    bodyCls: 'wizard-body',
+
     viewModel: 'wizard',
     controller: 'wizard',
+    
     layout: 'card',
+    
     config: {
         questionnaire: null
     },
     bind: {
         questionnaire: '{questionnaire}',
-        activeItem: '{activePane}'
-    },
-    header: {
-        bind: '{currentStepIndex}'
+        activeItem: '{currentPosition}',
+        title: '{questionnaire.title}'
     },
 
-    initComponent: function() {     
-        this.callParent();
+    applyQuestionnaire: function(questionnaire) {
+        if(!questionnaire) {
+            return;
+        }
 
-        this.getViewModel().bind('{currentStepIndex}', function(v) {
-            console.log('currentStepIndex: ' + v);
+        var intro = questionnaire.get('introduction'),
+            conclusion = questionnaire.get('conclusion');
+
+        this.add({ html: intro });
+
+        questionnaire.steps().each(this.addStepPane, this);
+
+        this.add({ html: conclusion });
+
+        return questionnaire;
+    },
+
+    setActiveItem: function() {   
+        if(this.items.length > 0) {
+            this.callParent(arguments);
+        }
+    },
+
+    addStepPane: function(step, i) {
+        this.add({
+            xtype: 'wizard-step',
+            viewModel: {
+                data: { step: step }
+            },
+            bind: { step: '{step}' }
         });
+    },
 
-        this.getViewModel().bind('{currentValidStepIndex}', function(v) {
-            console.log('currentValidStepIndex: ' + v);
+    load: function(id) {
+        this.getViewModel().setLinks({
+            questionnaire: {
+                type: 'Wizard.model.Questionnaire',
+                id: 1
+            }
         });
-
-        this.getViewModel().bind({ bindTo:'{questionnaire}', deep: true }, function(questionnaire) {
-            console.log(questionnaire);
-            this.add({ xtype: 'container', bind: { html: '{questionnaire.introduction}' } });
-
-            questionnaire.steps().each(function(step, i) {
-                this.getViewModel().set('step' + i, step);
-                this.add({ xtype: 'wizard-step', bind: { step: '{step' + i + '}' } });
-
-                this.getViewModel().bind('{step0}', function(s) {
-                    console.log(s)
-                });
-            }, this);
-
-            this.add({ xtype: 'container', bind: { html: '{questionnaire.conclusion}' } });
-
-        }, this);
     },
-
-    onCurrentStepValidityChanged: function() {
-        console.log(arguments); 
-    },
-
 
     dockedItems: [
+        { xtype: 'wizard-navigation', dock: 'bottom' },
         {
-            xtype: 'toolbar',
-            dock: 'bottom',
-            items: [
-                { text: 'Restart', itemId: 'restart', bind: { disabled: '{isIntroduction}' } },
-                { text: 'Previous', itemId: 'prev', bind: { disabled: '{isIntroduction}' } },
-                { text: 'Next', itemId: 'next', bind: { disabled: '{isConclusion}' } },
-                { text: 'Finish', itemId: 'finish', bind: { disabled: '{!isConclusion}' } }
-            ]
-        },
-        {
-            xtype: 'wizard-progress',
-            dock: 'bottom', bind: '{stepCount}'
+            xtype: 'wizard-progress', dock: 'bottom',
+            bind: '{questionnaire.steps}'
         }
     ]
 });

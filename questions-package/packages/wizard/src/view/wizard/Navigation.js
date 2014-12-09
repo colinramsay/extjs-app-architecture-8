@@ -1,9 +1,24 @@
+// packages/wizard/src/view/Navigation.js
 Ext.define('Wizard.view.wizard.Navigation', {
-    extend: 'Ext.Container',
+    extend: 'Ext.Toolbar',
     xtype: 'wizard-navigation',
     items: [
-        { text: 'Restart' },
-        { text: 'Previous' },
-        { text: 'Next' }
+        {
+            text: 'Restart', itemId: 'restart',
+            bind: { disabled: '{isIntroduction}' }
+        },
+        {
+            text: 'Previous', itemId: 'prev',
+            bind: { disabled: '{isIntroduction}' }
+        },
+        '->',
+        { 
+            text: 'Next', itemId: 'next',
+            bind: { disabled: '{!isNextEnabled}' }
+        },
+        {
+            text: 'Finish', itemId: 'finish',
+            bind: { disabled: '{isNotLastStep}' }
+        }
     ]
 });
