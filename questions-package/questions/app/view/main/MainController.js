@@ -21,7 +21,7 @@ Ext.define('Questions.view.main.MainController', {
             header: false, modal: true, layout: 'fit',
             autoShow: true, resizable: false,
             width: 800, height: 600, 
-            items: [{ xtype: 'wizard' }],
+            items: [{ xtype: 'wizard' }]
         });
 
         this.wizard.down('wizard').load(1);

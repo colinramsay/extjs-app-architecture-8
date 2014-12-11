@@ -1,13 +1,18 @@
 {
-  "name": "postcard",
+  "name": "questions",
   "version": "1.0.0",
-  "description": "Example Ext JS Webmail Interface",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/colinramsay/extjs-app-architecture-8"
+  },
+  "description": "Sample Application for Wizard Package",
   "main": "server.js",
   "scripts": {
+    "start": "npm run server & npm run watch",
     "server": "node server.js",
     "watch": "sencha app watch"
   },
-  "author": "",
+  "author": "Colin Ramsay",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.9.0",
